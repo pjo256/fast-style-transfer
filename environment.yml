@@ -11,4 +11,3 @@ dependencies:
   - pip
   - pip:
     - moviepy==1.0.0
-    - tensorflow==0.12.0
