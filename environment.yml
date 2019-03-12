@@ -1,0 +1,14 @@
+name: fast-style-transfer
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy=1.11.2=py27_0
+  - scipy=0.18.1=np111py27_0
+  - pillow=3.4.2=py27_0
+  - python=2.7.9
+  - pip
+  - pip:
+    - moviepy==1.0.0
+    - tensorflow==0.12.0

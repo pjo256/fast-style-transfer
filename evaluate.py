@@ -20,8 +20,9 @@ DEVICE = '/gpu:0'
 
 def ffwd_video(path_in, path_out, checkpoint_dir, device_t='/gpu:0', batch_size=4):
     video_clip = VideoFileClip(path_in, audio=False)
-    video_writer = ffmpeg_writer.FFMPEG_VideoWriter(path_out, video_clip.size, video_clip.fps, codec="libx264",
-                                                    preset="medium", bitrate="2000k",
+    height = 640
+    width = 480
+    video_writer = ffmpeg_writer.FFMPEG_VideoWriter(path_out, (width, height), 10, codec="libx264",
                                                     audiofile=path_in, threads=None,
                                                     ffmpeg_params=None)
 
@@ -56,6 +57,7 @@ def ffwd_video(path_in, path_out, checkpoint_dir, device_t='/gpu:0', batch_size=
 
         frame_count = 0  # The frame count that written to X
         for frame in video_clip.iter_frames():
+            print(frame_count)
             X[frame_count] = frame
             frame_count += 1
             if frame_count == batch_size:
