@@ -12,3 +12,4 @@ dependencies:
   - pip:
     - moviepy==1.0.0
     - tensorflow-gpu==0.12.0
+    - flask
