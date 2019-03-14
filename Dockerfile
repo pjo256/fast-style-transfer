@@ -10,6 +10,7 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY . .
+RUN chmod +x live.sh
 
 EXPOSE 1935
 CMD ["nginx", "-g", "daemon off;"]

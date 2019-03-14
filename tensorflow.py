@@ -175,7 +175,7 @@ class StyleTransfer(object):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    out_filename = 'rtmp://rtmp-global.cloud.vimeo.com/live/{}'.format(args.key)
+    out_filename = 'rtmp://rtmpin.livestreamingest.com/rtmpin/{}'.format(args.key)
     in_filename = 'rtmp://localhost/live/{}'.format(args.key)
     if args.test:
         process_frame = process_frame_simple
