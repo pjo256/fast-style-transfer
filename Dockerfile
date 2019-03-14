@@ -1,9 +1,15 @@
 FROM jrottenberg/ffmpeg:3.1-alpine AS ffmpeg
 
+FROM tiangolo/nginx-rtmp AS rtmp
+
 FROM tensorflow/tensorflow:0.12.0-gpu
 COPY --from=ffmpeg / /
+COPY --from=rtmp / /
 WORKDIR /src
-COPY . .
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-RUN chmod +x stylize.sh
-CMD ["/bin/bash", "-c", "./stylize.sh"]
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY . .
+
+EXPOSE 1935
+CMD ["nginx", "-g", "daemon off;"]
