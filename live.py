@@ -181,7 +181,7 @@ if __name__ == '__main__':
         process_frame = process_frame_simple
     else:
         size = get_video_size(in_filename)
-        process_frame = StyleTransfer(0, './models/{}.ckpt'.format(args.style)).process_frame
+        process_frame = StyleTransfer(size, './models/{}.ckpt'.format(args.style)).process_frame
 
     logger.info('Will stream to {} with style "{}"'.format(out_filename, args.style))
     run(in_filename, out_filename, process_frame)
