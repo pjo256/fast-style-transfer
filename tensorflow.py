@@ -36,26 +36,21 @@ import subprocess
 import zipfile
 import tensorflow as tf
 import transform
-import numpy as np
 import vgg
 import pdb
 import os
 import scipy.misc
-import tensorflow as tf
-from utils import save_img, get_img, exists, list_files
 from argparse import ArgumentParser
 from collections import defaultdict
 import time
 import json
-import subprocess
-import numpy
 
 
 parser = argparse.ArgumentParser(description='Example streaming ffmpeg numpy processing')
-parser.add_argument('in_filename', help='Input filename')
-parser.add_argument('out_filename', help='Output filename')
+parser.add_argument('key', help='Vimeo RTMP stream key')
+parser.add_argument('--test', action='store_true', help='Skip tensorflow')
 parser.add_argument(
-    '--dream', action='store_true', help='Use DeepDream frame processing (requires tensorflow)')
+    '-s', '--style', default='scream', help='Which style to use (la_muse, rain_princess, scream, udnie, wave, wreck)')
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -71,7 +66,7 @@ def get_video_size(filename):
 
 
 def start_ffmpeg_process1(in_filename):
-    logger.info('Starting ffmpeg process1')
+    logger.info('Starting ffmpeg input')
     args = (
         ffmpeg
         .input(in_filename)
@@ -82,7 +77,7 @@ def start_ffmpeg_process1(in_filename):
 
 
 def start_ffmpeg_process2(out_filename, width, height):
-    logger.info('Starting ffmpeg process2')
+    logger.info('Starting ffmpeg output')
     args = (
         ffmpeg
         .input('pipe:', format='rawvideo', pix_fmt='rgb24', s='{}x{}'.format(width, height))
@@ -180,10 +175,13 @@ class StyleTransfer(object):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.dream:
-        import tensorflow as tf
-        size = get_video_size(args.in_filename)
-        process_frame = StyleTransfer(size, './models/scream.ckpt').process_frame
-    else:
+    out_filename = 'rtmp://rtmp-global.cloud.vimeo.com/live/{}'.format(args.key)
+    in_filename = 'rtmp://localhost/live/{}'.format(args.key)
+    if args.test:
         process_frame = process_frame_simple
-    run(args.in_filename, args.out_filename, process_frame)
+    else:
+        size = get_video_size(in_filename)
+        process_frame = StyleTransfer(0, './models/{}.ckpt'.format(args.style)).process_frame
+
+    logger.info('Will stream to {} with style "{}"'.format(out_filename, args.style))
+    run(in_filename, out_filename, process_frame)
