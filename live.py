@@ -170,8 +170,8 @@ class StyleTransfer(object):
     def process_frame(self, frame, device_t='/gpu:0'):
         X = np.zeros(self._batch_shape, dtype=np.float32)
         X[0] = frame
-        _preds = self._sess.run(self._preds, feed_dict={self._img_placeholder: X})
-        return _preds
+        self._preds = self._sess.run(self._preds, feed_dict={self._img_placeholder: X})
+        return self._preds
 
 if __name__ == '__main__':
     args = parser.parse_args()
